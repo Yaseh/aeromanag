@@ -1,0 +1,160 @@
+<mxfile host="app.diagrams.net" modified="2026-05-31" version="21.0.0">
+  <diagram name="AéroManag — Schéma ER" id="aeromanag-er">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- AEROPORT -->
+        <mxCell id="t_aeroport" value="Aeroport" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_aeroport" value="PK  id_iata : String&#xa;nom : String&#xa;ville : String&#xa;pays : String&#xa;type : String" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- AVION -->
+        <mxCell id="t_avion" value="Avion" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_avion" value="PK  id_avion : Int&#xa;model : String&#xa;capacite : Int&#xa;statut : String&#xa;annee_mise_en_service : DateTime?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- PERSONNEL -->
+        <mxCell id="t_personnel" value="Personnel" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_personnel" value="PK  id_personnel : Int&#xa;nom : String&#xa;prenom : String&#xa;sexe : String&#xa;date_naissance : DateTime&#xa;date_debut_carriere : DateTime&#xa;role : String&#xa;qualification_avion : String?" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="510" width="220" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- ROUTE -->
+        <mxCell id="t_route" value="Route" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="40" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_route" value="PK  id_route : Int&#xa;distance_km : Int?&#xa;FK  aeroport_depart : String&#xa;FK  aeroport_arrive : String" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="360" y="70" width="220" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- VOL -->
+        <mxCell id="t_vol" value="Vol" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="250" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_vol" value="PK  id_vol : Int&#xa;numero_vol : String&#xa;type_de_vol : String?&#xa;FK  id_route : Int" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="360" y="280" width="220" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- INSTANCEVOL -->
+        <mxCell id="t_instance" value="InstanceVol" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="250" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_instance" value="PK  id_instance_vol : Int&#xa;date_depart : DateTime&#xa;date_arrivee : DateTime&#xa;heure_depart : String&#xa;heure_arrivee : String&#xa;statut : String&#xa;FK  id_vol : Int&#xa;FK  id_avion : Int&#xa;FK  id_commandant : Int&#xa;FK  id_copilote : Int&#xa;FK  id_chef_cabine : Int" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="700" y="280" width="260" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- ESCALE -->
+        <mxCell id="t_escale" value="Escale" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="40" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_escale" value="PK  id_escale : Int&#xa;heure_arrivee : String?&#xa;heure_depart : String?&#xa;FK  id_aeroport : String&#xa;FK  id_instance_vol : Int&#xa;&#xa;onDelete: Cascade" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="70" width="220" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- RESERVATION -->
+        <mxCell id="t_reservation" value="Reservation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="310" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_reservation" value="PK  id_reservation : Int&#xa;numero_siege : String&#xa;FK  id_instance_vol : Int&#xa;FK  id_passager : Int&#xa;&#xa;UNIQUE (id_instance_vol, numero_siege)&#xa;onDelete: Cascade" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="340" width="220" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- PASSAGER -->
+        <mxCell id="t_passager" value="Passager" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="570" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b_passager" value="PK  id_passager : Int&#xa;nom : String&#xa;prenom : String&#xa;nationalite : String&#xa;date_naissance : DateTime" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="600" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONS -->
+
+        <!-- Aeroport → Route 1:N Restrict -->
+        <mxCell id="r1" value="1:N Restrict" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;" edge="1" source="b_aeroport" target="b_route" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Route → Vol 1:N Restrict -->
+        <mxCell id="r2" value="1:N Restrict" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="b_route" target="b_vol" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Vol → InstanceVol 1:N Cascade -->
+        <mxCell id="r3" value="1:N Cascade" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" source="b_vol" target="b_instance" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Avion → InstanceVol 1:N Restrict -->
+        <mxCell id="r4" value="1:N Restrict" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.45;entryDx=0;entryDy=0;" edge="1" source="b_avion" target="b_instance" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Personnel → InstanceVol (commandant) -->
+        <mxCell id="r5" value="commandant 1:N" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.65;entryDx=0;entryDy=0;" edge="1" source="b_personnel" target="b_instance" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Personnel → InstanceVol (copilote) -->
+        <mxCell id="r6" value="copilote 1:N" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.55;exitDx=0;exitDy=0;entryX=0;entryY=0.78;entryDx=0;entryDy=0;" edge="1" source="b_personnel" target="b_instance" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Personnel → InstanceVol (chef cabine) -->
+        <mxCell id="r7" value="chef cabine 1:N" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.9;entryDx=0;entryDy=0;" edge="1" source="b_personnel" target="b_instance" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- InstanceVol → Reservation 1:N Cascade -->
+        <mxCell id="r8" value="1:N Cascade" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.55;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;" edge="1" source="b_instance" target="b_reservation" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- InstanceVol → Escale 1:N Cascade -->
+        <mxCell id="r9" value="1:N Cascade" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=1;exitY=0.1;exitDx=0;exitDy=0;entryX=0;entryY=0.8;entryDx=0;entryDy=0;" edge="1" source="b_instance" target="b_escale" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Aeroport → Escale 1:N Restrict -->
+        <mxCell id="r10" value="1:N Restrict" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=0.8;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="b_aeroport" target="b_escale" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Passager → Reservation 1:N Cascade -->
+        <mxCell id="r11" value="1:N Cascade" style="edgeStyle=orthogonalEdgeStyle;endArrow=ERmany;startArrow=ERmandOne;fontSize=11;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="b_passager" target="b_reservation" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- LÉGENDE -->
+        <mxCell id="leg_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="560" width="290" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_titre" value="Légende" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=13;align=left;" vertex="1" parent="1">
+          <mxGeometry x="710" y="565" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="PK = Clé primaire" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;align=left;" vertex="1" parent="1">
+          <mxGeometry x="710" y="585" width="270" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" value="FK = Clé étrangère" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;align=left;" vertex="1" parent="1">
+          <mxGeometry x="710" y="603" width="270" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" value="? = Champ optionnel (nullable)" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;align=left;" vertex="1" parent="1">
+          <mxGeometry x="710" y="621" width="270" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" value="Cascade / Restrict = comportement onDelete" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;align=left;" vertex="1" parent="1">
+          <mxGeometry x="710" y="639" width="270" height="18" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
