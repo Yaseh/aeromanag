@@ -27,7 +27,7 @@ npx prisma db seed
 
 ```bash
 # Mode développement (Angular dev server + Electron)
-npm run start:dev
+npm run start
 
 # Build de production
 npm run build
