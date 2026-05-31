@@ -13,7 +13,6 @@ import { DashboardStats, InstanceVol, StatutVol } from '../../models';
 })
 export class DashboardComponent implements OnInit {
 
-  // État réactif via signal()
   stats = signal<DashboardStats | null>(null);
   loading = signal(true);
   erreur = signal<string | null>(null);
@@ -30,7 +29,7 @@ export class DashboardComponent implements OnInit {
     return Math.round(total / s.instancesDuJour.length);
   });
 
-  // effect() : réagit chaque fois que stats change pour logger en console
+  // effect() : réagit chaque fois que stats change
   private readonly _logEffect = effect(() => {
     const s = this.stats();
     if (s) {
