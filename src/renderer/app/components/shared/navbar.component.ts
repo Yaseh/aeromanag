@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -16,7 +16,7 @@ export interface NavItem {
     <nav class="navbar">
       <div class="navbar-brand">✈ AéroManag</div>
       <ul class="nav-links">
-        @for (item of navItems(); track item.route) {
+        @for (item of navItems; track item.route) {
           <li>
             <a [routerLink]="item.route" routerLinkActive="active" class="nav-link">
               {{ item.label }}
@@ -57,6 +57,5 @@ export interface NavItem {
   `],
 })
 export class NavbarComponent {
-  // input() signal — reçoit la liste des éléments de nav depuis le parent
-  navItems = input<NavItem[]>([]);
+  @Input() navItems: NavItem[] = [];
 }
