@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AvionsService } from '../../services/avions.service';
@@ -12,8 +12,6 @@ import { Avion } from '../../models';
   styleUrls: ['./avions.component.scss'],
 })
 export class AvionsComponent implements OnInit {
-  private readonly avionsService = inject(AvionsService);
-  private readonly fb = inject(FormBuilder);
 
   avions = signal<Avion[]>([]);
   loading = signal(true);
@@ -30,6 +28,8 @@ export class AvionsComponent implements OnInit {
   readonly modeles = ['Airbus A320', 'Airbus A380', 'Boeing 737', 'Boeing 777', 'Airbus A350', 'Boeing 787'];
 
   avionForm!: FormGroup;
+
+  constructor(private avionsService: AvionsService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();

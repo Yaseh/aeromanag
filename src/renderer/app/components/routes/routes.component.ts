@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RoutesService } from '../../services/routes.service';
@@ -13,9 +13,6 @@ import { Route, Aeroport, CreateRouteData } from '../../models';
   styleUrls: ['./routes.component.scss'],
 })
 export class RoutesComponent implements OnInit {
-  private readonly routesService = inject(RoutesService);
-  private readonly aeroportsService = inject(AeroportsService);
-  private readonly fb = inject(FormBuilder);
 
   routes = signal<Route[]>([]);
   aeroports = signal<Aeroport[]>([]);
@@ -28,6 +25,12 @@ export class RoutesComponent implements OnInit {
   totalRoutes = computed(() => this.routes().length);
 
   routeForm!: FormGroup;
+
+  constructor(
+    private routesService: RoutesService,
+    private aeroportsService: AeroportsService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.initForm();

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VolsService } from '../../services/vols.service';
@@ -13,9 +13,6 @@ import { Vol, Route, CreateVolData } from '../../models';
   styleUrls: ['./vols.component.scss'],
 })
 export class VolsComponent implements OnInit {
-  private readonly volsService = inject(VolsService);
-  private readonly routesService = inject(RoutesService);
-  private readonly fb = inject(FormBuilder);
 
   vols = signal<Vol[]>([]);
   routes = signal<Route[]>([]);
@@ -32,6 +29,12 @@ export class VolsComponent implements OnInit {
   volForm!: FormGroup;
 
   readonly typesVol = ['Long-courrier', 'Court-courrier', 'Moyen-courrier'];
+
+  constructor(
+    private volsService: VolsService,
+    private routesService: RoutesService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.initForm();

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReservationsService } from '../../services/reservations.service';
@@ -15,10 +15,6 @@ import { ReservationRowComponent } from './reservation-row.component';
   styleUrls: ['./reservations.component.scss'],
 })
 export class ReservationsComponent implements OnInit {
-  private readonly reservationsService = inject(ReservationsService);
-  private readonly instancesService = inject(InstancesVolService);
-  private readonly passagersService = inject(PassagersService);
-  private readonly fb = inject(FormBuilder);
 
   reservations = signal<Reservation[]>([]);
   instances = signal<InstanceVol[]>([]);
@@ -43,6 +39,13 @@ export class ReservationsComponent implements OnInit {
   totalFiltrees = computed(() => this.reservationsFiltrees().length);
 
   reservationForm!: FormGroup;
+
+  constructor(
+    private reservationsService: ReservationsService,
+    private instancesService: InstancesVolService,
+    private passagersService: PassagersService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.initForm();

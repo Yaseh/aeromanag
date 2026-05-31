@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AeroportsService } from '../../services/aeroports.service';
@@ -12,8 +12,6 @@ import { Aeroport } from '../../models';
   styleUrls: ['./aeroports.component.scss'],
 })
 export class AeroportsComponent implements OnInit {
-  private readonly aeroportsService = inject(AeroportsService);
-  private readonly fb = inject(FormBuilder);
 
   aeroports = signal<Aeroport[]>([]);
   loading = signal(true);
@@ -37,6 +35,8 @@ export class AeroportsComponent implements OnInit {
   readonly types = ['International', 'Régional', 'Cargo', 'Militaire'];
 
   aeroportForm!: FormGroup;
+
+  constructor(private aeroportsService: AeroportsService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();

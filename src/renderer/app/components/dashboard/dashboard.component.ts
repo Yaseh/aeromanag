@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject, effect } from '@angular/core';
+import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DashboardService } from '../../services/dashboard.service';
@@ -12,7 +12,6 @@ import { DashboardStats, InstanceVol, StatutVol } from '../../models';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  private readonly dashboardService = inject(DashboardService);
 
   // État réactif via signal()
   stats = signal<DashboardStats | null>(null);
@@ -38,6 +37,8 @@ export class DashboardComponent implements OnInit {
       console.log(`Dashboard mis à jour : ${s.totalVols} vols, ${s.instancesDuJour.length} aujourd'hui`);
     }
   });
+
+  constructor(private dashboardService: DashboardService) {}
 
   async ngOnInit(): Promise<void> {
     await this.chargerStats();

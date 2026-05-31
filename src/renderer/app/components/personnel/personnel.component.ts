@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonnelService } from '../../services/personnel.service';
@@ -13,8 +13,6 @@ import { PersonnelCardComponent } from './personnel-card.component';
   styleUrls: ['./personnel.component.scss'],
 })
 export class PersonnelComponent implements OnInit {
-  private readonly personnelService = inject(PersonnelService);
-  private readonly fb = inject(FormBuilder);
 
   personnel = signal<Personnel[]>([]);
   loading = signal(true);
@@ -53,6 +51,8 @@ export class PersonnelComponent implements OnInit {
   });
 
   personnelForm!: FormGroup;
+
+  constructor(private personnelService: PersonnelService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();

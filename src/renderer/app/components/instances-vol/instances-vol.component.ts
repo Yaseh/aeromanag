@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject, effect } from '@angular/core';
+import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InstancesVolService } from '../../services/instances-vol.service';
@@ -15,11 +15,6 @@ import { InstanceVol, Avion, Personnel, Vol, StatutVol, CreateInstanceVolData } 
   styleUrls: ['./instances-vol.component.scss'],
 })
 export class InstancesVolComponent implements OnInit {
-  private readonly instancesService = inject(InstancesVolService);
-  private readonly avionsService = inject(AvionsService);
-  private readonly personnelService = inject(PersonnelService);
-  private readonly volsService = inject(VolsService);
-  private readonly fb = inject(FormBuilder);
 
   instances = signal<InstanceVol[]>([]);
   avions = signal<Avion[]>([]);
@@ -78,6 +73,14 @@ export class InstancesVolComponent implements OnInit {
   readonly statuts: StatutVol[] = ['Prévu', 'En cours', 'Atterri', 'Annulé'];
 
   planificationForm!: FormGroup;
+
+  constructor(
+    private instancesService: InstancesVolService,
+    private avionsService: AvionsService,
+    private personnelService: PersonnelService,
+    private volsService: VolsService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.initForm();

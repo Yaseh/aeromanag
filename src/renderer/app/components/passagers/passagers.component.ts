@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PassagersService } from '../../services/passagers.service';
@@ -12,8 +12,6 @@ import { Passager, CreatePassagerData } from '../../models';
   styleUrls: ['./passagers.component.scss'],
 })
 export class PassagersComponent implements OnInit {
-  private readonly passagersService = inject(PassagersService);
-  private readonly fb = inject(FormBuilder);
 
   passagers = signal<Passager[]>([]);
   loading = signal(true);
@@ -35,6 +33,8 @@ export class PassagersComponent implements OnInit {
   totalPassagers = computed(() => this.passagers().length);
 
   passagerForm!: FormGroup;
+
+  constructor(private passagersService: PassagersService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();

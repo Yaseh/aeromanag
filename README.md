@@ -26,7 +26,11 @@ npx prisma db seed
 ## Lancement
 
 ```bash
-npm run start
+# Mode développement (Angular dev server + Electron)
+npm run start:dev
+
+# Build de production
+npm run build
 ```
 
 ## Structure du projet
@@ -34,7 +38,8 @@ npm run start
 ```
 src/
   main/
-    main.ts          ← Electron : BrowserWindow + ipcMain.handle()
+    main.ts          ← Electron : BrowserWindow + ipcMain.handle() courts (1 ligne par handler)
+    database.ts      ← Classe Database : toute la logique Prisma centralisée
   preload/
     preload.ts       ← contextBridge : expose window.api au renderer
   renderer/
@@ -42,11 +47,28 @@ src/
       services/      ← Un service par entité (appels via window.api)
       components/    ← Dashboard, Vols, Instances, Personnel,
                         Réservations, Avions, Aéroports, Routes, Passagers
-      models/        ← Interfaces TypeScript
+      models/        ← Interfaces TypeScript (index.ts + window.d.ts)
 prisma/
   schema.prisma      ← 9 modèles SQLite avec relations et onDelete
   seed.ts            ← Données de test
 schema.drawio        ← Schéma entité-relation
+```
+
+## Architecture IPC
+
+```
+Renderer (Angular)
+  └── window.api.xxx.yyy()          via contextBridge (preload.ts)
+        └── ipcMain.handle()        une ligne par canal (main.ts)
+              └── db.method()       logique Prisma dans Database (database.ts)
+```
+
+## Injection de dépendances Angular
+
+Tous les composants utilisent l'injection par constructeur :
+
+```typescript
+constructor(private monService: MonService, private fb: FormBuilder) {}
 ```
 
 ## Pages
