@@ -1,6 +1,6 @@
 # AéroManag — Gestion de vols (admin)
 
-Application desktop de gestion opérationnelle pour compagnie aérienne, construite avec Electron, Angular et Prisma.
+Application desktop de gestion opérationnelle pour compagnie aérienne, construite avec Electron, Angular 17 et Prisma.
 
 ## Prérequis
 
@@ -20,13 +20,13 @@ npm install
 npx prisma migrate dev --name init
 
 # Injecter les données de test
-npx ts-node prisma/seed.ts
+npx prisma db seed
 ```
 
 ## Lancement
 
 ```bash
-npm run start:dev
+npm run start
 ```
 
 ## Structure du projet
@@ -35,30 +35,30 @@ npm run start:dev
 src/
   main/
     main.ts          ← Electron : BrowserWindow + ipcMain.handle()
-    database.ts      ← Classe Database : toute la logique Prisma
   preload/
     preload.ts       ← contextBridge : expose window.api au renderer
   renderer/
     app/
-      services/      ← ElectronService + un service par entité
-      components/    ← Dashboard, Vols, Personnel, Réservations, Avions, Aéroports, Routes, Passagers
-      shared/
-        types.ts     ← Interfaces TypeScript
+      services/      ← Un service par entité (appels via window.api)
+      components/    ← Dashboard, Vols, Instances, Personnel,
+                        Réservations, Avions, Aéroports, Routes, Passagers
+      models/        ← Interfaces TypeScript
 prisma/
-  schema.prisma      ← 9 modèles SQLite
+  schema.prisma      ← 9 modèles SQLite avec relations et onDelete
   seed.ts            ← Données de test
+schema.drawio        ← Schéma entité-relation
 ```
 
 ## Pages
 
 | Route | Description |
 |-------|-------------|
-| `/dashboard` | Statistiques générales |
+| `/dashboard` | Statistiques générales (count Prisma) |
 | `/instances` | Planification et gestion des vols |
 | `/personnel` | Gestion du personnel navigant |
 | `/reservations` | Gestion des réservations passagers |
 | `/avions` | Gestion de la flotte |
 | `/aeroports` | Gestion des aéroports |
-| `/routes` | Gestion des routes |
+| `/routes` | Gestion des routes entre aéroports |
 | `/passagers` | Gestion des passagers |
 | `/vols` | Gestion des vols commerciaux |
