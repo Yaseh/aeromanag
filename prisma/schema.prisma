@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Enum émulé via String pour SQLite — valeurs contrôlées côté application
+// Valeurs autorisées : "Prévu" | "En cours" | "Atterri" | "Annulé"
+
+model Aeroport {
+  id_iata       String  @id
+  nom           String
+  ville         String
+  pays          String
+  type          String
+
+  routesDepart  Route[]  @relation("RouteDepart")
+  routesArrivee Route[]  @relation("RouteArrivee")
+  escales       Escale[]
+}
+
+model Avion {
+  id_avion              Int       @id @default(autoincrement())
+  model                 String
+  capacite              Int
+  statut                String    @default("En service")
+  annee_mise_en_service DateTime?
+
+  instancesVol InstanceVol[]
+}
+
+model Personnel {
+  id_personnel        Int      @id @default(autoincrement())
+  nom                 String
+  prenom              String
+  sexe                String
+  date_naissance      DateTime
+  date_debut_carriere DateTime
+  role                String
+  qualification_avion String?
+
+  commandant  InstanceVol[] @relation("Commandant")
+  copilote    InstanceVol[] @relation("Copilote")
+  chefCabine  InstanceVol[] @relation("ChefCabine")
+}
+
+model Route {
+  id_route        Int    @id @default(autoincrement())
+  distance_km     Int?
+  aeroport_depart String
+  aeroport_arrive String
+
+  // La clé primaire d'Aeroport est id_iata (String @id)
+  depart Aeroport @relation("RouteDepart", fields: [aeroport_depart], references: [id_iata], onDelete: Restrict)
+  arrive Aeroport @relation("RouteArrivee", fields: [aeroport_arrive], references: [id_iata], onDelete: Restrict)
+
+  vols Vol[]
+}
+
+model Vol {
+  id_vol      Int     @id @default(autoincrement())
+  numero_vol  String
+  type_de_vol String?
+  id_route    Int
+
+  route     Route         @relation(fields: [id_route], references: [id_route], onDelete: Restrict)
+  instances InstanceVol[]
+}
+
+model InstanceVol {
+  id_instance_vol Int      @id @default(autoincrement())
+  date_depart     DateTime
+  date_arrivee    DateTime
+  heure_depart    String
+  heure_arrivee   String
+  // Valeurs : "Prévu" | "En cours" | "Atterri" | "Annulé"
+  statut          String   @default("Prévu")
+  id_vol          Int
+  id_avion        Int
+  id_commandant   Int
+  id_copilote     Int
+  id_chef_cabine  Int
+
+  vol        Vol       @relation(fields: [id_vol], references: [id_vol], onDelete: Cascade)
+  avion      Avion     @relation(fields: [id_avion], references: [id_avion], onDelete: Restrict)
+  commandant Personnel @relation("Commandant", fields: [id_commandant], references: [id_personnel], onDelete: Restrict)
+  copilote   Personnel @relation("Copilote", fields: [id_copilote], references: [id_personnel], onDelete: Restrict)
+  chefCabine Personnel @relation("ChefCabine", fields: [id_chef_cabine], references: [id_personnel], onDelete: Restrict)
+
+  reservations Reservation[]
+  escales      Escale[]
+}
+
+model Escale {
+  id_escale       Int     @id @default(autoincrement())
+  heure_arrivee   String?
+  heure_depart    String?
+  id_aeroport     String
+  id_instance_vol Int
+
+  aeroport    Aeroport    @relation(fields: [id_aeroport], references: [id_iata], onDelete: Restrict)
+  instanceVol InstanceVol @relation(fields: [id_instance_vol], references: [id_instance_vol], onDelete: Cascade)
+}
+
+model Passager {
+  id_passager    Int      @id @default(autoincrement())
+  nom            String
+  prenom         String
+  nationalite    String
+  date_naissance DateTime
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id_reservation  Int    @id @default(autoincrement())
+  numero_siege    String
+  id_instance_vol Int
+  id_passager     Int
+
+  instanceVol InstanceVol @relation(fields: [id_instance_vol], references: [id_instance_vol], onDelete: Cascade)
+  passager    Passager    @relation(fields: [id_passager], references: [id_passager], onDelete: Cascade)
+
+  // Un siège ne peut être réservé qu'une seule fois par instance de vol
+  @@unique([id_instance_vol, numero_siege])
+}

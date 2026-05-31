@@ -1,0 +1,88 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Vols ({{ vols().length }})</h1>
+    <button (click)="ouvrirFormulaire()">+ Ajouter un vol</button>
+  </div>
+
+  <p>Long-courriers : {{ nbLongCourrier() }}</p>
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else {
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>N° Vol</th>
+          <th>Type</th>
+          <th>Route</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vol of vols(); track vol.id_vol) {
+          <tr>
+            <td>{{ vol.numero_vol }}</td>
+            <td>{{ vol.type_de_vol ?? '—' }}</td>
+            <td>{{ getRouteLabel(vol) }}</td>
+            <td>
+              <button (click)="ouvrirEdition(vol)">Modifier</button>
+              <button (click)="supprimer(vol)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4">Aucun vol enregistré.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (afficherFormulaire()) {
+    <div style="margin-top:1rem; border:1px solid #ccc; padding:1rem; max-width:400px">
+      <h2>{{ modeEdition() ? 'Modifier le vol' : 'Ajouter un vol' }}</h2>
+
+      <form [formGroup]="volForm" (ngSubmit)="soumettre()">
+        <div>
+          <label>Numéro de vol *</label><br>
+          <input type="text" formControlName="numero_vol" placeholder="ex: AF001" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Type de vol</label><br>
+          <select formControlName="type_de_vol">
+            <option value="">Non précisé</option>
+            @for (type of typesVol; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Route *</label><br>
+          <select formControlName="id_route">
+            <option [ngValue]="null">Sélectionner une route</option>
+            @for (route of routes(); track route.id_route) {
+              <option [ngValue]="route.id_route">
+                {{ route.depart?.id_iata ?? route.aeroport_depart }} →
+                {{ route.arrive?.id_iata ?? route.aeroport_arrive }}
+                @if (route.distance_km) { ({{ route.distance_km }} km) }
+              </option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.75rem">
+          <button type="submit" [disabled]="volForm.invalid">
+            {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" (click)="fermerFormulaire()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

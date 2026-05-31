@@ -1,0 +1,88 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Avions ({{ avions().length }}) — {{ nombreEnService() }} en service</h1>
+    <button (click)="ouvrirFormulaire()">+ Ajouter un avion</button>
+  </div>
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else {
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Modèle</th>
+          <th>Capacité</th>
+          <th>Statut</th>
+          <th>Mise en service</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (avion of avions(); track avion.id_avion) {
+          <tr>
+            <td>{{ avion.id_avion }}</td>
+            <td>{{ avion.model }}</td>
+            <td>{{ avion.capacite }}</td>
+            <td>{{ avion.statut }}</td>
+            <td>{{ formatDate(avion.annee_mise_en_service) }}</td>
+            <td>
+              <button (click)="ouvrirEdition(avion)">Modifier</button>
+              <button (click)="supprimer(avion)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6">Aucun avion enregistré.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (afficherFormulaire()) {
+    <div style="margin-top:1rem; border:1px solid #ccc; padding:1rem; max-width:400px">
+      <h2>{{ modeEdition() ? 'Modifier l\'avion' : 'Ajouter un avion' }}</h2>
+
+      <form [formGroup]="avionForm" (ngSubmit)="soumettre()">
+        <div>
+          <label>Modèle *</label><br>
+          <select formControlName="model">
+            <option value="">Sélectionner</option>
+            @for (m of modeles; track m) {
+              <option [value]="m">{{ m }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Capacité *</label><br>
+          <input type="number" formControlName="capacite" min="1" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Statut *</label><br>
+          <select formControlName="statut">
+            @for (s of statuts; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Année de mise en service</label><br>
+          <input type="date" formControlName="annee_mise_en_service" />
+        </div>
+
+        <div style="margin-top:0.75rem">
+          <button type="submit" [disabled]="avionForm.invalid">
+            {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" (click)="fermerFormulaire()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

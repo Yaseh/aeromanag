@@ -1,0 +1,87 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Passagers ({{ totalPassagers() }})</h1>
+    <button (click)="ouvrirFormulaire()">+ Ajouter un passager</button>
+  </div>
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  <div style="margin-bottom:0.75rem">
+    <input
+      type="text"
+      placeholder="Rechercher par nom..."
+      (input)="setRecherche($any($event.target).value)"
+    />
+  </div>
+
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else {
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Nationalité</th>
+          <th>Date de naissance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pax of passagersFiltres(); track pax.id_passager) {
+          <tr>
+            <td>{{ pax.nom }}</td>
+            <td>{{ pax.prenom }}</td>
+            <td>{{ pax.nationalite }}</td>
+            <td>{{ formatDate(pax.date_naissance) }}</td>
+            <td>
+              <button (click)="ouvrirEdition(pax)">Modifier</button>
+              <button (click)="supprimer(pax)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5">Aucun passager trouvé.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (afficherFormulaire()) {
+    <div style="margin-top:1rem; border:1px solid #ccc; padding:1rem; max-width:400px">
+      <h2>{{ modeEdition() ? 'Modifier le passager' : 'Ajouter un passager' }}</h2>
+
+      <form [formGroup]="passagerForm" (ngSubmit)="soumettre()">
+        <div>
+          <label>Nom *</label><br>
+          <input type="text" formControlName="nom" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Prénom *</label><br>
+          <input type="text" formControlName="prenom" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Nationalité *</label><br>
+          <input type="text" formControlName="nationalite" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Date de naissance *</label><br>
+          <input type="date" formControlName="date_naissance" />
+        </div>
+
+        <div style="margin-top:0.75rem">
+          <button type="submit" [disabled]="passagerForm.invalid">
+            {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" (click)="fermerFormulaire()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

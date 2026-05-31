@@ -1,0 +1,51 @@
+{
+  "name": "aero-manag",
+  "version": "1.0.0",
+  "description": "Application desktop de gestion de vols - Admin",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "ng": "ng",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:preload": "tsc -p tsconfig.preload.json",
+    "build:renderer": "ng build --output-path dist/renderer",
+    "build": "npm run build:main && npm run build:preload && npm run build:renderer",
+    "start": "npm run build && concurrently \"ng serve --port 4200\" \"wait-on http://localhost:4200 && cross-env NODE_ENV=development electron .\"",
+    "start:dev": "concurrently \"ng serve --port 4200\" \"wait-on http://localhost:4200 && cross-env NODE_ENV=development electron .\"",
+    "electron": "electron .",
+    "prisma:migrate": "npx prisma migrate dev --name init",
+    "prisma:seed": "npx ts-node prisma/seed.ts",
+    "prisma:studio": "npx prisma studio",
+    "postinstall": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.0",
+    "@angular/animations": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/forms": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/router": "^17.3.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.3"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.0",
+    "@angular/cli": "^17.3.0",
+    "@angular/compiler-cli": "^17.3.0",
+    "@types/node": "^20.0.0",
+    "concurrently": "^8.2.2",
+    "electron": "^29.0.0",
+    "electron-builder": "^24.9.1",
+    "prisma": "^5.10.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.4.0",
+    "wait-on": "^7.2.0",
+    "cross-env": "^7.0.3"
+  }
+}

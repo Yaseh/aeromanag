@@ -1,0 +1,169 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Instances de vol ({{ totalFiltrees() }})</h1>
+    <button (click)="ouvrirFormulaire()">+ Planifier un vol</button>
+  </div>
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  <div style="margin-bottom:0.75rem">
+    <select (change)="setFiltreStatut($any($event.target).value)">
+      <option value="">Tous les statuts</option>
+      @for (s of statuts; track s) {
+        <option [value]="s">{{ s }}</option>
+      }
+    </select>
+    <input type="date" (change)="setFiltreDate($any($event.target).value)" style="margin-left:0.5rem" />
+  </div>
+
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else {
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>N° Vol</th>
+          <th>Route</th>
+          <th>Date départ</th>
+          <th>Départ</th>
+          <th>Arrivée</th>
+          <th>Avion</th>
+          <th>Commandant</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (inst of instancesFiltrees(); track inst.id_instance_vol) {
+          <tr>
+            <td>{{ inst.vol?.numero_vol }}</td>
+            <td>{{ getRouteLabel(inst) }}</td>
+            <td>{{ formatDate(inst.date_depart) }}</td>
+            <td>{{ inst.heure_depart }}</td>
+            <td>{{ inst.heure_arrivee }}</td>
+            <td>{{ inst.avion?.model }}</td>
+            <td>{{ inst.commandant?.prenom }} {{ inst.commandant?.nom }}</td>
+            <td>
+              <select
+                [value]="inst.statut"
+                (change)="changerStatut(inst, $any($event.target).value)"
+              >
+                @for (s of statuts; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </td>
+            <td>
+              <button (click)="ouvrirEdition(inst)">Modifier</button>
+              <button (click)="supprimer(inst)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="9">Aucune instance de vol trouvée.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (afficherFormulaire()) {
+    <div style="margin-top:1rem; border:1px solid #ccc; padding:1rem; max-width:500px">
+      <h2>{{ modeEdition() ? 'Modifier l\'instance' : 'Planifier un vol' }}</h2>
+
+      <form [formGroup]="planificationForm" (ngSubmit)="soumettre()">
+        <div>
+          <label>Vol *</label><br>
+          <select formControlName="id_vol">
+            <option [ngValue]="null">Sélectionner un vol</option>
+            @for (vol of vols(); track vol.id_vol) {
+              <option [ngValue]="vol.id_vol">
+                {{ vol.numero_vol }} — {{ vol.route?.depart?.id_iata }} → {{ vol.route?.arrive?.id_iata }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Avion (en service) *</label><br>
+          <select formControlName="id_avion">
+            <option [ngValue]="null">Sélectionner un avion</option>
+            @for (avion of avionsEnService(); track avion.id_avion) {
+              <option [ngValue]="avion.id_avion">{{ avion.model }} ({{ avion.capacite }} places)</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Commandant (Pilote) *</label><br>
+          <select formControlName="id_commandant">
+            <option [ngValue]="null">Sélectionner un commandant</option>
+            @for (p of pilotes(); track p.id_personnel) {
+              <option [ngValue]="p.id_personnel">
+                {{ p.prenom }} {{ p.nom }} — {{ p.qualification_avion ?? 'Aucune qualification' }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Copilote *</label><br>
+          <select formControlName="id_copilote">
+            <option [ngValue]="null">Sélectionner un copilote</option>
+            @for (p of copilotes(); track p.id_personnel) {
+              <option [ngValue]="p.id_personnel">{{ p.prenom }} {{ p.nom }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Chef de cabine *</label><br>
+          <select formControlName="id_chef_cabine">
+            <option [ngValue]="null">Sélectionner un chef de cabine</option>
+            @for (p of chefsCabine(); track p.id_personnel) {
+              <option [ngValue]="p.id_personnel">{{ p.prenom }} {{ p.nom }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Statut *</label><br>
+          <select formControlName="statut">
+            @for (s of statuts; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Date de départ *</label><br>
+          <input type="date" formControlName="date_depart" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Date d'arrivée *</label><br>
+          <input type="date" formControlName="date_arrivee" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Heure de départ * (HH:MM)</label><br>
+          <input type="time" formControlName="heure_depart" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Heure d'arrivée * (HH:MM)</label><br>
+          <input type="time" formControlName="heure_arrivee" />
+        </div>
+
+        <div style="margin-top:0.75rem">
+          <button type="submit" [disabled]="planificationForm.invalid">
+            {{ modeEdition() ? 'Mettre à jour' : 'Planifier' }}
+          </button>
+          <button type="button" (click)="fermerFormulaire()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

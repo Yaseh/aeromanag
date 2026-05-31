@@ -1,0 +1,96 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Aéroports ({{ aeroportsFiltres().length }})</h1>
+    <button (click)="ouvrirFormulaire()">+ Ajouter un aéroport</button>
+  </div>
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  <div style="margin-bottom:0.75rem">
+    <input
+      type="text"
+      placeholder="Rechercher par ville, pays ou code IATA..."
+      (input)="setRechercheVille($any($event.target).value)"
+    />
+  </div>
+
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else {
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Code IATA</th>
+          <th>Nom</th>
+          <th>Ville</th>
+          <th>Pays</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (aero of aeroportsFiltres(); track aero.id_iata) {
+          <tr>
+            <td>{{ aero.id_iata }}</td>
+            <td>{{ aero.nom }}</td>
+            <td>{{ aero.ville }}</td>
+            <td>{{ aero.pays }}</td>
+            <td>{{ aero.type }}</td>
+            <td>
+              <button (click)="ouvrirEdition(aero)">Modifier</button>
+              <button (click)="supprimer(aero)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6">Aucun aéroport trouvé.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (afficherFormulaire()) {
+    <div style="margin-top:1rem; border:1px solid #ccc; padding:1rem; max-width:400px">
+      <h2>{{ modeEdition() ? 'Modifier l\'aéroport' : 'Ajouter un aéroport' }}</h2>
+
+      <form [formGroup]="aeroportForm" (ngSubmit)="soumettre()">
+        <div>
+          <label>Code IATA * (3 lettres)</label><br>
+          <input type="text" formControlName="id_iata" maxlength="3" style="text-transform:uppercase" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Nom complet *</label><br>
+          <input type="text" formControlName="nom" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Ville *</label><br>
+          <input type="text" formControlName="ville" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Pays *</label><br>
+          <input type="text" formControlName="pays" />
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Type *</label><br>
+          <select formControlName="type">
+            @for (t of types; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.75rem">
+          <button type="submit" [disabled]="aeroportForm.invalid">
+            {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" (click)="fermerFormulaire()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

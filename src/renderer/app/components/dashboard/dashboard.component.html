@@ -1,0 +1,79 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Tableau de bord</h1>
+    <button (click)="chargerStats()" [disabled]="loading()">Actualiser</button>
+  </div>
+
+  @if (loading()) { <p>Chargement...</p> }
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  @if (stats(); as s) {
+    <table border="1" cellpadding="8" cellspacing="0" style="margin-bottom:1rem">
+      <tbody>
+        <tr>
+          <td>Vols programmés</td>
+          <td><strong>{{ s.totalVols }}</strong></td>
+          <td><a routerLink="/vols">Voir les vols</a></td>
+        </tr>
+        <tr>
+          <td>Avions en service</td>
+          <td><strong>{{ s.avionsEnService }}</strong></td>
+          <td><a routerLink="/avions">Voir les avions</a></td>
+        </tr>
+        <tr>
+          <td>Membres du personnel</td>
+          <td><strong>{{ s.totalPersonnel }}</strong></td>
+          <td><a routerLink="/personnel">Voir le personnel</a></td>
+        </tr>
+        <tr>
+          <td>Réservations</td>
+          <td><strong>{{ s.totalReservations }}</strong></td>
+          <td><a routerLink="/reservations">Voir les réservations</a></td>
+        </tr>
+        @if (s.instancesDuJour.length > 0) {
+          <tr>
+            <td>Taux d'occupation moyen aujourd'hui</td>
+            <td><strong>{{ tauxOccupationMoyen() }}%</strong></td>
+            <td><a routerLink="/instances">Voir les instances</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <h2>Vols d'aujourd'hui ({{ s.instancesDuJour.length }})</h2>
+
+    @if (s.instancesDuJour.length === 0) {
+      <p>Aucun vol programmé aujourd'hui.</p>
+    } @else {
+      <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+          <tr>
+            <th>N° Vol</th>
+            <th>Route</th>
+            <th>Départ</th>
+            <th>Arrivée</th>
+            <th>Avion</th>
+            <th>Commandant</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (inst of s.instancesDuJour; track inst.id_instance_vol) {
+            <tr>
+              <td>{{ inst.vol?.numero_vol }}</td>
+              <td>{{ getRouteLabel(inst) }}</td>
+              <td>{{ inst.heure_depart }}</td>
+              <td>{{ inst.heure_arrivee }}</td>
+              <td>{{ inst.avion?.model }}</td>
+              <td>{{ inst.commandant?.prenom }} {{ inst.commandant?.nom }}</td>
+              <td>{{ inst.statut }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

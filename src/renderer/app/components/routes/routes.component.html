@@ -1,0 +1,84 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Routes ({{ totalRoutes() }})</h1>
+    <button (click)="ouvrirFormulaire()">+ Ajouter une route</button>
+  </div>
+
+  @if (erreur()) {
+    <p style="color:red">{{ erreur() }}</p>
+  }
+
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else {
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Départ</th>
+          <th>Arrivée</th>
+          <th>Distance (km)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (route of routes(); track route.id_route) {
+          <tr>
+            <td>{{ route.id_route }}</td>
+            <td>{{ route.depart?.nom ?? route.aeroport_depart }} ({{ route.aeroport_depart }})</td>
+            <td>{{ route.arrive?.nom ?? route.aeroport_arrive }} ({{ route.aeroport_arrive }})</td>
+            <td>{{ route.distance_km ?? '—' }}</td>
+            <td>
+              <button (click)="ouvrirEdition(route)">Modifier</button>
+              <button (click)="supprimer(route)">Supprimer</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5">Aucune route enregistrée.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (afficherFormulaire()) {
+    <div style="margin-top:1rem; border:1px solid #ccc; padding:1rem; max-width:400px">
+      <h2>{{ modeEdition() ? 'Modifier la route' : 'Ajouter une route' }}</h2>
+
+      <form [formGroup]="routeForm" (ngSubmit)="soumettre()">
+        <div>
+          <label>Aéroport départ *</label><br>
+          <select formControlName="aeroport_depart">
+            <option value="">Sélectionner</option>
+            @for (a of aeroports(); track a.id_iata) {
+              <option [value]="a.id_iata">{{ a.nom }} ({{ a.id_iata }})</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Aéroport arrivée *</label><br>
+          <select formControlName="aeroport_arrive">
+            <option value="">Sélectionner</option>
+            @for (a of aeroports(); track a.id_iata) {
+              <option [value]="a.id_iata">{{ a.nom }} ({{ a.id_iata }})</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-top:0.5rem">
+          <label>Distance (km)</label><br>
+          <input type="number" formControlName="distance_km" />
+        </div>
+
+        <div style="margin-top:0.75rem">
+          <button type="submit" [disabled]="routeForm.invalid">
+            {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" (click)="fermerFormulaire()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

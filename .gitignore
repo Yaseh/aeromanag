@@ -1,0 +1,29 @@
+# Dépendances
+node_modules/
+
+# Build
+dist/
+out/
+.angular/
+
+# Base de données
+prisma/dev.db
+prisma/dev.db-journal
+prisma/*.db
+prisma/*.db-journal
+
+# Variables d'environnement
+.env
+.env.local
+
+# Prisma client généré
+node_modules/.prisma/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Divers
+*.js.map
+.DS_Store
+Thumbs.db
